@@ -147,7 +147,7 @@
                 <optgroup label="Unencrypted (no password)">
                     <option value="public">Public</option>
                     {% if args.private %}
-                    <option value="unlisted">Unlisted</option>
+                    <option value="unlisted" selected>Unlisted</option>
                     {%- endif %}
                 </optgroup>
                 {% if args.enable_readonly %}
