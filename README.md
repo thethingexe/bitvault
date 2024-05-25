@@ -22,7 +22,7 @@ source .env;
 microbin
 ```
 
-On our website [microbin.eu](https://microbin.eu) you will find the following:
+On the original developers website [microbin.eu](https://microbin.eu) you will find the following:
 
 - [Screenshots](https://microbin.eu/screenshots/)
 - [Guide and Documentation](https://microbin.eu/docs/intro)
