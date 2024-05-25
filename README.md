@@ -69,3 +69,4 @@ You can use MicroBin:
 MicroBin and MicroBin.eu are available under the [BSD 3-Clause License](LICENSE).
 
 © Dániel Szabó 2022-2023
+Contribution by Mario Stöckl 2024. Changes I make will be placed under the GNU License.
