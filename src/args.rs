@@ -118,11 +118,6 @@ pub struct Args {
     #[clap(long, env = "MICROBIN_HASH_IDS")]
     pub hash_ids: bool,
 
-    #[clap(long, env = "MICROBIN_LIST_SERVER")]
-    pub list_server: bool,
-
-    #[clap(long, env = "MICROBIN_DISABLE_TELEMETRY")]
-    pub disable_telemetry: bool,
 
     #[clap(long, env = "MICROBIN_DISABLE_UPDATE_CHECKING")]
     pub disable_update_checking: bool,
@@ -130,7 +125,7 @@ pub struct Args {
     #[clap(long, env = "MICROBIN_ENCRYPTION_CLIENT_SIDE")]
     pub encryption_client_side: bool,
 
-    #[clap(long, env = "MICROBIN_ENCRYPTION_SERVER_SIDE")]
+    #[clap(long, env = "MICROBIN_ENCRYPTION_SERVER_SIDE", default_value_t = true)]
     pub encryption_server_side: bool,
 
     #[clap(
@@ -191,7 +186,7 @@ impl Args {
             readonly: self.readonly,
             show_read_stats: self.show_read_stats,
             title: self.title,
-            list_server: self.list_server,
+            //list_server: self.list_server,
             threads: self.threads,
             gc_days: self.gc_days,
             enable_burn_after: self.enable_burn_after,
@@ -205,7 +200,6 @@ impl Args {
             no_file_upload: self.no_file_upload,
             custom_css: self.custom_css,
             hash_ids: self.hash_ids,
-            disable_telemetry: self.disable_telemetry,
             encryption_client_side: self.encryption_client_side,
             encryption_server_side: self.encryption_server_side,
             max_file_size_encrypted_mb: self.max_file_size_encrypted_mb,

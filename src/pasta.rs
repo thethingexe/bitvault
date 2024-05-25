@@ -1,5 +1,5 @@
 use bytesize::ByteSize;
-use chrono::{Datelike, Local, TimeZone, Timelike};
+use chrono::{Datelike, Local, TimeZone, Timelike, LocalResult};
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::path::Path;
@@ -111,7 +111,10 @@ impl Pasta {
     }
 
     pub fn created_as_string(&self) -> String {
-        let date = Local.timestamp(self.created, 0);
+        let date = match Local.timestamp_opt(self.created, 0) {
+            LocalResult::Single(dt) => dt,
+            _ => return String::from("Invalid date"),
+        };
         format!(
             "{:02}-{:02} {:02}:{:02}",
             date.month(),
@@ -125,7 +128,10 @@ impl Pasta {
         if self.expiration == 0 {
             String::from("Never")
         } else {
-            let date = Local.timestamp(self.expiration, 0);
+            let date = match Local.timestamp_opt(self.expiration, 0) {
+                LocalResult::Single(dt) => dt,
+                _ => return String::from("Invalid date"),
+            };
             format!(
                 "{:02}-{:02} {:02}:{:02}",
                 date.month(),
