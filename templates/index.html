@@ -1,4 +1,12 @@
 {% include "header.html" %}
+<!-- Access Paste Form -->
+<form id="access-paste-form" style="display: flex; gap: 10px; margin-bottom: 20px;">
+    <input type="text" id="animal1" name="animal1" placeholder="Animal 1" required>
+    <input type="text" id="animal2" name="animal2" placeholder="Animal 2" required>
+    <input type="text" id="animal3" name="animal3" placeholder="Animal 3" required>
+    <button type="button" id="access-paste-button">Access Paste</button>
+</form>
+
 <form id="pasta-form" action="upload" method="POST" enctype="multipart/form-data">
     <br>
     <div id="settings">
@@ -392,12 +400,36 @@
         attachFileButton.textContent = "Attached: " + hiddenFileButton.files[0].name;
         evt.preventDefault();
     };
-
+        // Access Paste button functionality
+        document.getElementById('access-paste-button').addEventListener('click', function() {
+            const animal1 = document.getElementById('animal1').value.trim().toLowerCase();
+            const animal2 = document.getElementById('animal2').value.trim().toLowerCase();
+            const animal3 = document.getElementById('animal3').value.trim().toLowerCase();
+            if (animal1 && animal2 && animal3) {
+                const pasteId = `${animal1}-${animal2}-${animal3}`;
+                window.location.href = `/upload/${pasteId}`;
+            } else {
+                alert('Please fill in all animal name fields.');
+            }
+        });
 </script>
 
 <style>
     input::file-selector-button {
         display: none;
+    }
+
+    #access-paste-form input {
+        width: 30%;
+        margin-right: 10px;
+    }
+
+    #access-paste-button {
+        background-color: #d78520;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
     }
 
     #settings {
@@ -417,7 +449,7 @@
     #attach-file-button-label {
         cursor: pointer;
         padding: 0.5rem;
-        border: #2975D2 2px dotted;
+        border: #d78520 2px dotted;
         border-radius: 6px;
         padding-left: 1rem;
         padding-right: 1rem;
