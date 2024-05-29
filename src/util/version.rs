@@ -21,13 +21,13 @@ pub struct Version {
 }
 
 pub static CURRENT_VERSION: Version = Version {
-    major: 2,
-    minor: 0,
-    patch: 4,
-    title: Cow::Borrowed("2.0.4"),
-    long_title: Cow::Borrowed("Version 2.0.4, Build 20230711"),
+    major: 0,
+    minor: 1,
+    patch: 0,
+    title: Cow::Borrowed("0.1.0"),
+    long_title: Cow::Borrowed("Version 0.1.0, Build 20240529"),
     description: Cow::Borrowed("This version includes bug fixes and performance improvements."),
-    date: Cow::Borrowed("2023-07-11"),
+    date: Cow::Borrowed("2024-05-29"),
     update_type: Cow::Borrowed("beta"),
 };
 
@@ -48,7 +48,7 @@ impl Version {
 }
 
 pub async fn fetch_latest_version() -> Result<Version, reqwest::Error> {
-    let url = "https://api.microbin.eu/version/";
+    let url = "https://github.com/overcuriousity/bitvault/";
     let response = reqwest::get(url).await?;
     let version = response.json::<Version>().await?;
 

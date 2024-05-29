@@ -115,7 +115,7 @@
             <select style="width: 100%;" name="syntax_highlight" id="syntax_highlight">
                 <option value="none">None</option>
                 <optgroup label="Client-Rendered">
-                    <option value="auto">Automatic</option>
+                    <option value="auto" selected>Automatic</option>
                 </optgroup>
                 <optgroup label="Server-Rendered">
                     <option value="sh">Bash Shell</option>
@@ -157,9 +157,9 @@
             <select style="width: 100%;" name="privacy" id="privacy">
                 <optgroup label="Unencrypted (no password)">
                     <option value="public">Public</option>
-                    {% if args.private %}
+                    <!--{% if args.private %}-->
                     <option value="unlisted" selected>Unlisted</option>
-                    {%- endif %}
+                    <!--{%- endif %}-->
                 </optgroup>
                 {% if args.enable_readonly %}
                 <optgroup label="Unencrypted (protected)">
@@ -202,7 +202,7 @@
         {% endif %}
         <b>
             <input style="width: 140px; float: right; background-color:
-            #2975D2; color: white;" id="submit-button" type="submit" value="Save" />
+            #F2A900; color: rgb(1, 8, 202);" id="submit-button" type="submit" value="Save" />
             {% if args.readonly %}
             {% if status == "incorrect" %}
             <input style="width: 160px; float: right; background-color: rgba(255, 0, 0, 0.137);" type="password"
@@ -416,22 +416,18 @@
             }
         });
 </script>
-
 <style>
     input::file-selector-button {
         display: none;
     }
 
     #access-paste-form input {
-        width: 30%;
+        width: 20%;
+        height: 28px;
         margin-right: 10px;
     }
 
     #access-paste-button {
-        background-color: #d78520;
-        color: white;
-        border: none;
-        border-radius: 4px;
         cursor: pointer;
     }
 

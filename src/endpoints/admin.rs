@@ -70,7 +70,7 @@ pub async fn post_admin(
         message = "Warning: No public URL set with --public-path parameter. QR code and URL Copying functions have been disabled"
     }
 
-    if ARGS.auth_admin_username == "admin" && ARGS.auth_admin_password == "m1cr0b1n" {
+    if ARGS.auth_admin_username == "admin" && ARGS.auth_admin_password == "b1tv4u1t" {
         status = "WARNING";
         message = "Warning: You are using the default admin login details. This is a security risk, please change them."
     }

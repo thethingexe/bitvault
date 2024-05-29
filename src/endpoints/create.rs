@@ -91,7 +91,7 @@ pub async fn create(
         content: String::from(""),
         file: None,
         extension: String::from(""),
-        private: false,
+        private: true, 
         readonly: false,
         editable: true,
         encrypt_server: false,
