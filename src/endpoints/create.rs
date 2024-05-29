@@ -1,3 +1,5 @@
+// DISCLAIMER
+// (c) 2024-05-27 Mario Stöckl - derived from the original Microbin Project by Daniel Szabo
 use crate::pasta::PastaFile;
 use crate::util::animalnumbers::to_animal_names;
 use crate::util::db::insert;

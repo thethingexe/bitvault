@@ -1,3 +1,5 @@
+// DISCLAIMER
+// (c) 2024-05-27 Mario Stöckl - derived from the original Microbin Project by Daniel Szabo
 extern crate reqwest;
 extern crate serde;
 extern crate serde_json;

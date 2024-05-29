@@ -1,3 +1,5 @@
+// DISCLAIMER
+// (c) 2024-05-27 Mario Stöckl - derived from the original Microbin Project by Daniel Szabo
 use actix_multipart::Multipart;
 use actix_web::{get, post, web, Error, HttpResponse};
 use futures::TryStreamExt;

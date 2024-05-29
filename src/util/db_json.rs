@@ -1,3 +1,5 @@
+// DISCLAIMER
+// (c) 2024-05-27 Mario Stöckl - derived from the original Microbin Project by Daniel Szabo
 use std::fs::File;
 use std::io;
 use std::io::{BufReader, BufWriter};

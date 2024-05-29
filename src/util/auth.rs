@@ -1,3 +1,5 @@
+// DISCLAIMER
+// (c) 2024-05-27 Mario Stöckl - derived from the original Microbin Project by Daniel Szabo
 use actix_web::dev::ServiceRequest;
 use actix_web::{error, Error};
 use actix_web_httpauth::extractors::basic::BasicAuth;

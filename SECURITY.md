@@ -2,11 +2,9 @@
 
 ## Version Support
 
-Currently we only have capacity to support the latest version of MicroBin. We recommend that you always update to the newest one and check our pages regularly for announcements.
+We don´t offer centralized support. The Project is published under GPL-3 and thus should be maintained by the FOSS community.
+There is no guarantee of continued maintenance by Mario Stöckl or the original developer.
 
 ## Reporting a Vulnerability
 
-Security vulnerabilities can be reported directly to the developer/maintainer at d@szab.eu.
-
-Sensitive information may be GPG encrypted with my public key available at 
-https://szab.eu/assets/files/daniel-szabo-pub.asc.
+We strongly recommend to immediately disclose any vulnerabilities via GitHub issue, or better, make contributions to fix them.

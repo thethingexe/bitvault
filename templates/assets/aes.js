@@ -1,4 +1,4 @@
-/*! MIT License. Copyright 2015-2018 Richard Moore <me@ricmoo.com>. See LICENSE.txt. */
+/*! MIT License. Copyright 2015-2018 Richard Moore <me@ricmoo.com>. See https://opensource.org/license/MIT. */
 (function(root) {
     "use strict";
 
