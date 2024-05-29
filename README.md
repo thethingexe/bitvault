@@ -1,3 +1,4 @@
+
 # BitVault
 
 
@@ -5,11 +6,17 @@
 
 *TL:DR:*
 The Main Target of this Project is:
-    - Maintaining the great [Microbin](https://github.com/szabodanika/microbin) Project
-    - Increasing Privacy and removing features, which are not necessary
-    - Adding some convenience-features without decreasing the main goals of privacy, simlicity and security
-    - A new color-scheme - orange is the obvious choice, because of our ideals
-    - Replacing the Animal names with BIP39-words
+
+ - Maintaining the great
+   [Microbin](https://github.com/szabodanika/microbin) Project
+ - Increasing Privacy and removing features, which are not necessary
+ - Adding some convenience-features without decreasing the main goals of
+   privacy, simplicity and security
+ - A new color-scheme - orange is the obvious choice, because of our
+   ideals
+ - Replacing the Animal names with BIP39-words
+
+
 
 BitVault is a super tiny, feature rich, configurable, self-contained and self-hosted paste bin web application. It is very easy to set up and use, and will only require a few megabytes of memory and disk storage. It takes only a couple minutes to set it up, why not give it a try now?
 
