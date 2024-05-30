@@ -1,7 +1,7 @@
 // DISCLAIMER
 // (c) 2024-05-27 Mario Stöckl - derived from the original Microbin Project by Daniel Szabo
 use crate::pasta::PastaFile;
-use crate::util::animalnumbers::to_animal_names;
+use crate::util::bip39words::to_bip39_words;
 use crate::util::db::insert;
 use crate::util::hashids::to_hashids;
 use crate::util::misc::{encrypt, encrypt_file, is_valid_url};
@@ -87,7 +87,7 @@ pub async fn create(
     } as i64;
 
     let mut new_pasta = Pasta {
-        id: rand::thread_rng().gen::<u16>() as u64,
+        id: rand::thread_rng().gen_range(0..=8589934591),
         content: String::from(""),
         file: None,
         extension: String::from(""),
@@ -317,7 +317,7 @@ pub async fn create(
     let slug = if ARGS.hash_ids {
         to_hashids(id)
     } else {
-        to_animal_names(id)
+        to_bip39_words(id)
     };
 
     if encrypt_server {

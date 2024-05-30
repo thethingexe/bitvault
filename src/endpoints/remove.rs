@@ -7,7 +7,7 @@ use futures::TryStreamExt;
 use crate::args::ARGS;
 use crate::endpoints::errors::ErrorTemplate;
 use crate::pasta::PastaFile;
-use crate::util::animalnumbers::to_u64;
+use crate::util::bip39words::to_u64;
 use crate::util::db::delete;
 use crate::util::hashids::to_u64 as hashid_to_u64;
 use crate::util::misc::{decrypt, remove_expired};

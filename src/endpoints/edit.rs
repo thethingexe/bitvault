@@ -2,7 +2,7 @@
 // (c) 2024-05-27 Mario Stöckl - derived from the original Microbin Project by Daniel Szabo
 use crate::args::Args;
 use crate::endpoints::errors::ErrorTemplate;
-use crate::util::animalnumbers::to_u64;
+use crate::util::bip39words::to_u64;
 use crate::util::db::update;
 use crate::util::hashids::to_u64 as hashid_to_u64;
 use crate::util::misc::{decrypt, encrypt, remove_expired};

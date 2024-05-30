@@ -23,7 +23,7 @@ pub mod args;
 pub mod pasta;
 
 pub mod util {
-    pub mod animalnumbers;
+    pub mod bip39words;
     pub mod auth;
     pub mod db;
     pub mod db_json;

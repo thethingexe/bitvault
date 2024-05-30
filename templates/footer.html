@@ -6,8 +6,7 @@
 <p style="font-size: small; text-align: center;margin-top: 2rem;">
     {% if args.footer_text.as_ref().is_none() %}
      <a href="https://github.com/overcuriousity/bitvault/">BitVault</a>, forked from <a href="https://microbin.eu">MicroBin</a> by Dániel Szabó and the FOSS
-    Community. Make the Web <b>free</b>, <b>accessible</b> and
-    <b>secure</b>! {%- else %} {{ args.footer_text.as_ref().unwrap() | safe }} {%-
+    Community. {%- else %} {{ args.footer_text.as_ref().unwrap() | safe }} {%-
     endif %}
 </p>
 

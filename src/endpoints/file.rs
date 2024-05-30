@@ -6,7 +6,7 @@ use std::path::PathBuf;
 use crate::args::ARGS;
 use crate::util::hashids::to_u64 as hashid_to_u64;
 use crate::util::misc::remove_expired;
-use crate::util::{animalnumbers::to_u64, misc::decrypt_file};
+use crate::util::{bip39words::to_u64, misc::decrypt_file};
 use crate::AppState;
 use actix_multipart::Multipart;
 use actix_web::{get, post, web, Error, HttpResponse};
