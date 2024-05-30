@@ -24,7 +24,7 @@ pub struct Args {
     #[clap(long, env = "BITVAULT_ADMIN_USERNAME", default_value = "admin")]
     pub auth_admin_username: String,
 
-    #[clap(long, env = "BITVAULT_ADMIN_PASSWORD", default_value = "m1cr0b1n")]
+    #[clap(long, env = "BITVAULT_ADMIN_PASSWORD", default_value = "b1tv4u1t")]
     pub auth_admin_password: String,
 
     #[clap(long, env = "BITVAULT_EDITABLE")]

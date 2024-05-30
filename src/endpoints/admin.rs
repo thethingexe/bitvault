@@ -18,7 +18,7 @@ struct AdminTemplate<'a> {
     status: &'a String,
     version_string: &'a String,
     message: &'a String,
-    update: &'a Option<Version>,
+    //update: &'a Option<Version>,
 }
 
 #[get("/admin")]
@@ -100,7 +100,7 @@ pub async fn post_admin(
             status: &String::from(status),
             version_string: &format!("{}", CURRENT_VERSION.long_title),
             message: &String::from(message),
-            update: &update,
+            //update: &update,
         }
         .render()
         .unwrap(),
