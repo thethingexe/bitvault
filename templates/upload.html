@@ -188,14 +188,30 @@ pasta.file_embeddable() && !pasta.encrypt_client %}
   }
 
   if (copyURLBtn) {
-    copyURLBtn.addEventListener("click", () => {
-      navigator.clipboard.writeText(url)
-      copyURLBtn.innerHTML = "Copied"
-      setTimeout(() => {
-        copyURLBtn.innerHTML = "Copy URL"
-      }, 1000)
-    })
-  }
+  copyURLBtn.addEventListener("click", () => {
+    if (navigator.share) {
+      navigator.share({
+        title: document.title,
+        url: url
+      }).then(() => {
+        copyURLBtn.innerHTML = "Shared";
+      }).catch((error) => {
+        console.error('Error sharing:', error);
+      });
+    } else {
+      navigator.clipboard.writeText(url).then(() => {
+        copyURLBtn.innerHTML = "Copied";
+      }).catch((error) => {
+        console.error('Error copying to clipboard:', error);
+      });
+    }
+
+    setTimeout(() => {
+      copyURLBtn.innerHTML = "Copy URL";
+    }, 1000);
+  });
+}
+
 
   // it will be undefined when the element does not exist on non-url pastas
   if (copyRedirectBtn) {
