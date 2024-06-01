@@ -3,7 +3,7 @@
 
 {% include "header.html" %}
 <!-- Access Paste Form -->
-<form id="access-paste-form" style="display: flex; gap: 10px; margin-bottom: 20px;">
+<form id="access-paste-form" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
     <input type="text" id="word1" name="word1" placeholder="Word 1" list="bip39-words" required>
     <input type="text" id="word2" name="word2" placeholder="Word 2" list="bip39-words" required>
     <input type="text" id="word3" name="word3" placeholder="Word 3" list="bip39-words" required>
@@ -447,6 +447,7 @@
 
     #access-paste-form input {
         width: 20%;
+        min-width: 140px;
         height: 28px;
         margin-right: 10px;
     }
