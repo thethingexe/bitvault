@@ -67,7 +67,7 @@ pub fn expiration_to_timestamp(expiration: &str, timenow: i64) -> i64 {
         }
         _ => {
             log::error!("{}", "Unexpected expiration time!");
-            timenow + 60 * 60 * 24 * 7
+            timenow + 60 * 60 * 24 * 365 * 100  // 100 years in the future
         }
     }
 }
