@@ -60,14 +60,14 @@ pub fn expiration_to_timestamp(expiration: &str, timenow: i64) -> i64 {
         "1week" => timenow + 60 * 60 * 24 * 7,
         "never" => {
             if ARGS.eternal_pasta {
-                timenow + 60 * 60 * 24 * 7
+                timenow + 60 * 60 * 24 * 365 * 100  // 100 years in the future
             } else {
                 0
             }
         }
         _ => {
             log::error!("{}", "Unexpected expiration time!");
-            timenow + 60 * 60 * 24 * 365 * 100  // 100 years in the future
+            timenow + 60 * 60 * 24 * 7
         }
     }
 }
