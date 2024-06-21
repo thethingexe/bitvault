@@ -76,7 +76,7 @@ pub struct Pasta {
 }
 
 impl Pasta {
-    pub fn id_as_animals(&self) -> String {
+    pub fn id_as_words(&self) -> String {
         if ARGS.hash_ids {
             to_hashids(self.id)
         } else {

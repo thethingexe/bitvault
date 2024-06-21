@@ -2,9 +2,9 @@
 # (c) 2024-05-27 Mario Stöckl - derived from the original Microbin Project by Daniel Szabo -->
 
 {% include "header.html" %}
-<form action="/{{ path }}/{{ pasta.id_as_animals() }}" method="POST" enctype="multipart/form-data">
+<form action="/{{ path }}/{{ pasta.id_as_words() }}" method="POST" enctype="multipart/form-data">
     <h4>
-        Editing upload '{{ pasta.id_as_animals() }}'
+        Editing upload '{{ pasta.id_as_words() }}'
     </h4>
     <label>Content</label>
     <br>

@@ -32,7 +32,7 @@ pub async fn remove(data: web::Data<AppState>, id: web::Path<String>) -> HttpRes
                 return HttpResponse::Found()
                     .append_header((
                         "Location",
-                        format!("/auth_remove_private/{}", pasta.id_as_animals()),
+                        format!("/auth_remove_private/{}", pasta.id_as_words()),
                     ))
                     .finish();
             }
@@ -42,7 +42,7 @@ pub async fn remove(data: web::Data<AppState>, id: web::Path<String>) -> HttpRes
                 if fs::remove_file(format!(
                     "./{}/attachments/{}/{}",
                     ARGS.data_dir,
-                    pasta.id_as_animals(),
+                    pasta.id_as_words(),
                     name
                 ))
                 .is_err()
@@ -54,7 +54,7 @@ pub async fn remove(data: web::Data<AppState>, id: web::Path<String>) -> HttpRes
                 if fs::remove_dir(format!(
                     "./{}/attachments/{}/",
                     ARGS.data_dir,
-                    pasta.id_as_animals()
+                    pasta.id_as_words()
                 ))
                 .is_err()
                 {
@@ -117,7 +117,7 @@ pub async fn post_remove(
                             if fs::remove_file(format!(
                                 "./{}/attachments/{}/{}",
                                 ARGS.data_dir,
-                                pasta.id_as_animals(),
+                                pasta.id_as_words(),
                                 name
                             ))
                             .is_err()
@@ -129,7 +129,7 @@ pub async fn post_remove(
                             if fs::remove_dir(format!(
                                 "./{}/attachments/{}/",
                                 ARGS.data_dir,
-                                pasta.id_as_animals()
+                                pasta.id_as_words()
                             ))
                             .is_err()
                             {
@@ -152,7 +152,7 @@ pub async fn post_remove(
                         return Ok(HttpResponse::Found()
                             .append_header((
                                 "Location",
-                                format!("/auth_remove_private/{}/incorrect", pasta.id_as_animals()),
+                                format!("/auth_remove_private/{}/incorrect", pasta.id_as_words()),
                             ))
                             .finish());
                     }
@@ -160,7 +160,7 @@ pub async fn post_remove(
                     return Ok(HttpResponse::Found()
                         .append_header((
                             "Location",
-                            format!("/auth_remove_private/{}/incorrect", pasta.id_as_animals()),
+                            format!("/auth_remove_private/{}/incorrect", pasta.id_as_words()),
                         ))
                         .finish());
                 }
@@ -172,7 +172,7 @@ pub async fn post_remove(
                     format!(
                         "{}/upload/{}",
                         ARGS.public_path_as_str(),
-                        pastas[i].id_as_animals()
+                        pastas[i].id_as_words()
                     ),
                 ))
                 .finish());

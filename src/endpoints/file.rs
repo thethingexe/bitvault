@@ -56,7 +56,7 @@ pub async fn post_secure_file(
             let file = File::open(format!(
                 "./{}/attachments/{}/data.enc",
                 ARGS.data_dir,
-                pastas[index].id_as_animals()
+                pastas[index].id_as_words()
             ))?;
 
             let decrypted_data: Vec<u8> = decrypt_file(&password, &file)?;
@@ -114,7 +114,7 @@ pub async fn get_file(
                 return Ok(HttpResponse::Found()
                     .append_header((
                         "Location",
-                        format!("/auth_file/{}", pastas[index].id_as_animals()),
+                        format!("/auth_file/{}", pastas[index].id_as_words()),
                     ))
                     .finish());
             }
@@ -123,7 +123,7 @@ pub async fn get_file(
             let file_path = format!(
                 "./{}/attachments/{}/{}",
                 ARGS.data_dir,
-                pastas[index].id_as_animals(),
+                pastas[index].id_as_words(),
                 pasta_file.name()
             );
             let file_path = PathBuf::from(file_path);

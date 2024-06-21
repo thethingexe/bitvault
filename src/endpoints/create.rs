@@ -233,14 +233,14 @@ pub async fn create(
                 std::fs::create_dir_all(format!(
                     "./{}/attachments/{}",
                     ARGS.data_dir,
-                    &new_pasta.id_as_animals()
+                    &new_pasta.id_as_words()
                 ))
                 .unwrap();
 
                 let filepath = format!(
                     "./{}/attachments/{}/{}",
                     ARGS.data_dir,
-                    &new_pasta.id_as_animals(),
+                    &new_pasta.id_as_words(),
                     &file.name()
                 );
 
@@ -294,7 +294,7 @@ pub async fn create(
         let filepath = format!(
             "./{}/attachments/{}/{}",
             ARGS.data_dir,
-            &new_pasta.id_as_animals(),
+            &new_pasta.id_as_words(),
             &new_pasta.file.as_ref().unwrap().name()
         );
         if new_pasta.encrypt_client {

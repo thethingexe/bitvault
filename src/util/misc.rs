@@ -45,7 +45,7 @@ pub fn remove_expired(pastas: &mut Vec<Pasta>) {
                 if fs::remove_file(format!(
                     "./{}/attachments/{}/{}",
                     ARGS.data_dir,
-                    p.id_as_animals(),
+                    p.id_as_words(),
                     file.name()
                 ))
                 .is_err()
@@ -57,7 +57,7 @@ pub fn remove_expired(pastas: &mut Vec<Pasta>) {
                 if fs::remove_dir(format!(
                     "./{}/attachments/{}/",
                     ARGS.data_dir,
-                    p.id_as_animals()
+                    p.id_as_words()
                 ))
                 .is_err()
                 {

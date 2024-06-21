@@ -55,7 +55,7 @@ fn pastaresponse(
             return HttpResponse::Found()
                 .append_header((
                     "Location",
-                    format!("/auth/{}", pastas[index].id_as_animals()),
+                    format!("/auth/{}", pastas[index].id_as_words()),
                 ))
                 .finish();
         }
@@ -79,7 +79,7 @@ fn pastaresponse(
                 return HttpResponse::Found()
                     .append_header((
                         "Location",
-                        format!("/auth/{}/incorrect", pastas[index].id_as_animals()),
+                        format!("/auth/{}/incorrect", pastas[index].id_as_words()),
                     ))
                     .finish();
             }
@@ -282,7 +282,7 @@ pub async fn getrawpasta(
             return Ok(HttpResponse::Found()
                 .append_header((
                     "Location",
-                    format!("/auth_raw/{}", pastas[index].id_as_animals()),
+                    format!("/auth_raw/{}", pastas[index].id_as_words()),
                 ))
                 .finish());
         }
@@ -363,7 +363,7 @@ pub async fn postrawpasta(
             return Ok(HttpResponse::Found()
                 .append_header((
                     "Location",
-                    format!("/auth/{}", pastas[index].id_as_animals()),
+                    format!("/auth/{}", pastas[index].id_as_words()),
                 ))
                 .finish());
         }
@@ -387,7 +387,7 @@ pub async fn postrawpasta(
                 return Ok(HttpResponse::Found()
                     .append_header((
                         "Location",
-                        format!("/auth/{}/incorrect", pastas[index].id_as_animals()),
+                        format!("/auth/{}/incorrect", pastas[index].id_as_words()),
                     ))
                     .finish());
             }
