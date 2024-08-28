@@ -20,6 +20,8 @@ The Main Target of this Project is:
 
 BitVault is a super tiny, feature rich, configurable, self-contained and self-hosted paste bin web application. It is very easy to set up and use, and will only require a few megabytes of memory and disk storage. It takes only a couple minutes to set it up, why not give it a try now?
 
+TOR HiddenService for demonstration: [http://bvaultb5wmxcxxapep7tnq2zrkjva6ry7uekfcsxpsxts2ve5qmf4iyd.onion/](http://bvaultb5wmxcxxapep7tnq2zrkjva6ry7uekfcsxpsxts2ve5qmf4iyd.onion/)
+
 ### Build from source
 
 ```
