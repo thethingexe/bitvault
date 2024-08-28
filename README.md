@@ -25,9 +25,77 @@ TOR HiddenService for demonstration: [http://bvaultb5wmxcxxapep7tnq2zrkjva6ry7ue
 ### Build from source
 
 ```
-Instructions will follow
-```
+# Install rust and git if necessary (Arch Linux)
+sudo pacman -S rust git
 
+# clone repository & build w. cargo
+git clone https://github.com/overcuriousity/bitvault
+cd bitvault
+cargo build --release
+cargo run --release
+
+# one-liner to build:
+sudo pacman -S rust git && \
+git clone https://github.com/overcuriousity/bitvault && \
+cd bitvault && \
+cargo build --release
+```
+Create systemd service to run it automatically:
+```
+# Example /etc/systemd/system/bitvault.service
+[Unit]
+Description=BitVault
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RootDirectory=/
+
+# This is the user that will be used to run the executable
+User=<insert username>
+# This is where BitVault will save your data
+WorkingDirectory=/home/<insert username>/
+# This is the location of the compiled binary which we did with cargo before 
+ExecStart=/home/<insert username>/bitvault/target/release/bitvault
+
+Environment="BITVAULT_ADMIN_USERNAME=admin"
+Environment="BITVAULT_ADMIN_PASSWORD=changeme
+Environment="BITVAULT_PORT=8080"
+Environment="BITVAULT_BIND=0.0.0.0"
+Environment="BITVAULT_PUBLIC_PATH=https://bitvault.example.org"
+# Environment="BITVAULT_SHORT_PATH=https://short.net"
+Environment="BITVAULT_JSON_DB=false"
+Environment="BITVAULT_EDITABLE=true"
+Environment="BITVAULT_HIDE_HEADER=false"
+Environment="BITVAULT_HIDE_FOOTER=false"
+Environment="BITVAULT_HIDE_LOGO=false"
+Environment="BITVAULT_NO_LISTING=false"
+Environment="BITVAULT_READONLY=false"
+Environment="BITVAULT_SHOW_READ_STATS=true"
+Environment="BITVAULT_THREADS=2"
+Environment="BITVAULT_GC_DAYS=90"
+Environment="BITVAULT_WIDE=true"
+Environment="BITVAULT_ETERNAL_PASTA=true"
+Environment="BITVAULT_PRIVATE=true"
+Environment="BITVAULT_HIGHLIGHTSYNTAX=true"
+Environment="BITVAULT_QR=true"
+Environment="BITVAULT_ENABLE_BURN_AFTER=true"
+Environment="BITVAULT_ENABLE_READONLY=true"
+Environment="BITVAULT_DEFAULT_EXPIRY=24hour"
+Environment="BITVAULT_NO_FILE_UPLOAD=false"
+Environment="BITVAULT_HASH_IDS=false"
+Environment="BITVAULT_ENCRYPTION_CLIENT_SIDE=true"
+Environment="BITVAULT_ENCRYPTION_SERVER_SIDE=true"
+Environment="BITVAULT_MAX_FILE_SIZE_ENCRYPTED_MB=2048"
+Environment="BITVAULT_MAX_FILE_SIZE_UNENCRYPTED_MB=2048"
+# Environment="BITVAULT_BASIC_AUTH_USERNAME=something"
+# Environment="BITVAULT_BASIC_AUTH_PASSWORD=something"
+# Environment="BITVAULT_CUSTOM_CSS="https://myserver.com/custom.css""
+Environment="BITVAULT_TITLE=BitVault"
+[Install]
+WantedBy=multi-user.target
+```
 
 On the original developers website [microbin.eu](https://microbin.eu) you will find the following:
 
