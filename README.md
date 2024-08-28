@@ -108,11 +108,11 @@ On the original developers website [microbin.eu](https://microbin.eu) you will f
 
 - Entirely self-contained executable, BitVault is a single file!
 - Server-side and client-side encryption
-- File uploads (eg. `server.com/file/pig-dog-cat`) - this will soon be improved with the BIP39 words
-- Raw text serving (eg. `server.com/raw/pig-dog-cat`)
+- File uploads (eg. `server.com/file/this-awesome-project`) 
+- Raw text serving (eg. `server.com/raw/this-awesome-project`)
 - QR code support
 - URL shortening and redirection
-- Animal names instead of random numbers for upload identifiers (64 animals)
+- BIP39-words instead of random numbers for upload identifiers (2048 words)
 - SQLite and JSON database support
 - Private and public, editable and uneditable, automatically and never expiring uploads
 - Automatic dark mode and custom styling support with very little CSS and only vanilla JS (see [`water.css`](https://github.com/kognise/water.css))
@@ -141,5 +141,5 @@ You can use BitVault:
 
 BitVault is available under the [GPL-3](LICENSE) License, while the original Project was published under [BSD 3-Clause License](ORIGINAL_LICENSE).
 
-© Dániel Szabó 2022-2023
+© Dániel Szabó 2022-2023, under BSD-3-Clause
 © Mario Stöckl, from 2024-05-27, under GPL-3 License.
