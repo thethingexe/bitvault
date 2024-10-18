@@ -5,8 +5,7 @@ WORKDIR /app
 COPY ./ ./
 
 RUN \
-  cargo build --release && \
-  cargo run --release
+  cargo build --release
 
 EXPOSE 8080
 
