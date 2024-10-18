@@ -1,3 +1,16 @@
+### compose.yaml
+
+```
+services:
+  bitvault:
+    image: ghcr.io/thethingexe/bitvault:master
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - ./bitvault_data:/bitvault_data
+networks: {}
+```
 
 # BitVault
 
