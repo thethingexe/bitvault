@@ -1,7 +1,5 @@
 FROM rust:latest as build
 
-WORKDIR /app
-
 COPY ./ ./
 
 RUN \
@@ -18,7 +16,7 @@ COPY --from=build \
   /etc/ssl/certs/ca-certificates.crt
 
 COPY --from=build \
-  /app/target/release/bitvault \
+  /target/release/bitvault \
   /usr/bin/bitvault
 
 EXPOSE 8080
