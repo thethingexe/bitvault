@@ -7,6 +7,8 @@ COPY ./ ./
 RUN \
   cargo build --release
 
+WORKDIR /app
+
 COPY \
   /app/target/release/bitvault \
   /usr/bin/bitvault
