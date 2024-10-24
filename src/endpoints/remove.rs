@@ -13,6 +13,7 @@ use crate::util::hashids::to_u64 as hashid_to_u64;
 use crate::util::misc::{decrypt, remove_expired};
 use crate::AppState;
 use askama::Template;
+
 use std::fs;
 
 #[get("/remove/{id}")]

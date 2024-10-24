@@ -10,6 +10,7 @@ use actix_multipart::Multipart;
 use actix_web::error::ErrorBadRequest;
 use actix_web::{get, web, Error, HttpResponse, Responder};
 use askama::Template;
+
 use bytesize::ByteSize;
 use futures::TryStreamExt;
 use log::warn;
@@ -17,9 +18,6 @@ use rand::Rng;
 use std::io::Write;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-fn field_name_matches(field_name: Option<&str>, expected: &str) -> bool {
-    field_name.map_or(false, |name| name == expected)
-}
 
 #[derive(Template)]
 #[template(path = "index.html")]

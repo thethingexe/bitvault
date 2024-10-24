@@ -4,6 +4,7 @@ use crate::args::{Args, ARGS};
 use actix_web::{get, web, HttpResponse};
 use askama::Template;
 
+
 #[derive(Template)]
 #[template(path = "auth_admin.html")]
 struct AuthAdmin<'a> {

@@ -9,6 +9,7 @@ use crate::AppState;
 use actix_web::{get, web, HttpResponse};
 use askama::Template;
 
+
 #[derive(Template)]
 #[template(path = "auth_upload.html")]
 struct AuthPasta<'a> {
