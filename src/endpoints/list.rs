@@ -15,6 +15,8 @@ struct ListTemplate<'a> {
     args: &'a Args,
 }
 
+
+
 #[get("/list")]
 pub async fn list(data: web::Data<AppState>) -> HttpResponse {
     if ARGS.no_listing {

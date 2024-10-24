@@ -11,6 +11,8 @@ struct AuthAdmin<'a> {
     status: String,
 }
 
+
+
 #[get("/auth_admin")]
 pub async fn auth_admin() -> HttpResponse {
     return HttpResponse::Ok().content_type("text/html").body(

@@ -16,11 +16,12 @@ use magic_crypt::{new_magic_crypt, MagicCryptTrait};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 #[derive(Template)]
-#[template(path = "upload.html", escape = "none")]
+#[template(path = "upload.html")]
 struct PastaTemplate<'a> {
     pasta: &'a Pasta,
     args: &'a Args,
 }
+
 
 fn pastaresponse(
     data: web::Data<AppState>,
@@ -132,7 +133,7 @@ pub async fn postpasta(
     let mut password = String::from("");
 
     while let Some(mut field) = payload.try_next().await? {
-        if field.name() == "password" {
+        if field.name() == Some("password") {
             while let Some(chunk) = field.try_next().await? {
                 password.push_str(std::str::from_utf8(&chunk).unwrap().to_string().as_str());
             }
@@ -151,7 +152,7 @@ pub async fn postshortpasta(
     let mut password = String::from("");
 
     while let Some(mut field) = payload.try_next().await? {
-        if field.name() == "password" {
+        if field.name() == Some("password") {
             while let Some(chunk) = field.try_next().await? {
                 password.push_str(std::str::from_utf8(&chunk).unwrap().to_string().as_str());
             }
@@ -328,7 +329,7 @@ pub async fn postrawpasta(
     let mut password = String::from("");
 
     while let Some(mut field) = payload.try_next().await? {
-        if field.name() == "password" {
+        if field.name() == Some("password") {
             while let Some(chunk) = field.try_next().await? {
                 password.push_str(std::str::from_utf8(&chunk).unwrap().to_string().as_str());
             }

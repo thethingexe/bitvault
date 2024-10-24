@@ -9,23 +9,22 @@ use crate::args::ARGS;
 pub async fn auth_validator(
     req: ServiceRequest,
     credentials: BasicAuth,
-) -> Result<ServiceRequest, Error> {
+) -> Result<ServiceRequest, (Error, ServiceRequest)> {
     // check if username matches
-    if credentials.user_id().as_ref() == ARGS.auth_basic_username.as_ref().unwrap() {
+    if credentials.user_id() == ARGS.auth_basic_username.as_ref().unwrap() {
         return match ARGS.auth_basic_password.as_ref() {
             Some(cred_pass) => match credentials.password() {
-                None => Err(error::ErrorBadRequest("Invalid login details.")),
+                None => Err((error::ErrorUnauthorized("Invalid login details."), req)),
                 Some(arg_pass) => {
                     if arg_pass == cred_pass {
                         Ok(req)
                     } else {
-                        Err(error::ErrorBadRequest("Invalid login details."))
+                        Err((error::ErrorUnauthorized("Invalid login details."), req))
                     }
                 }
             },
             None => Ok(req),
         };
-    } else {
-        Err(error::ErrorBadRequest("Invalid login details."))
     }
+    Err((error::ErrorUnauthorized("Invalid login details."), req))
 }

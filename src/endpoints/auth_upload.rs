@@ -20,6 +20,8 @@ struct AuthPasta<'a> {
     path: String,
 }
 
+
+
 #[get("/auth/{id}")]
 pub async fn auth_upload(data: web::Data<AppState>, id: web::Path<String>) -> HttpResponse {
     // get access to the pasta collection

@@ -10,6 +10,8 @@ struct Guide<'a> {
     args: &'a Args,
 }
 
+
+
 #[get("/guide")]
 pub async fn guide() -> HttpResponse {
     HttpResponse::Ok()

@@ -99,7 +99,7 @@ pub async fn post_remove(
     let mut password = String::from("");
 
     while let Some(mut field) = payload.try_next().await? {
-        if field.name() == "password" {
+        if field.name() == Some("password") {
             while let Some(chunk) = field.try_next().await? {
                 password = std::str::from_utf8(&chunk).unwrap().to_string();
             }

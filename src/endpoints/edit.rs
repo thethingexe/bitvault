@@ -13,13 +13,15 @@ use askama::Template;
 use futures::TryStreamExt;
 
 #[derive(Template)]
-#[template(path = "edit.html", escape = "none")]
+#[template(path = "edit.html")]
 struct EditTemplate<'a> {
     pasta: &'a Pasta,
     args: &'a Args,
     path: &'a String,
     status: &'a String,
 }
+
+
 
 #[get("/edit/{id}")]
 pub async fn get_edit(data: web::Data<AppState>, id: web::Path<String>) -> HttpResponse {
@@ -138,7 +140,7 @@ pub async fn post_edit_private(
     let mut password = String::from("");
 
     while let Some(mut field) = payload.try_next().await? {
-        if field.name() == "password" {
+        if field.name() == Some("password") {
             while let Some(chunk) = field.try_next().await? {
                 password.push_str(std::str::from_utf8(&chunk).unwrap().to_string().as_str());
             }
@@ -226,12 +228,12 @@ pub async fn post_submit_edit_private(
     let mut new_content = String::from("");
 
     while let Some(mut field) = payload.try_next().await? {
-        if field.name() == "content" {
+        if field.name() == Some("content") {
             while let Some(chunk) = field.try_next().await? {
                 new_content.push_str(std::str::from_utf8(&chunk).unwrap().to_string().as_str());
             }
         }
-        if field.name() == "password" {
+        if field.name() == Some("password") {
             while let Some(chunk) = field.try_next().await? {
                 password = std::str::from_utf8(&chunk).unwrap().to_string();
             }
@@ -320,12 +322,12 @@ pub async fn post_edit(
     let mut password = String::from("");
 
     while let Some(mut field) = payload.try_next().await? {
-        if field.name() == "content" {
+        if field.name() == Some("content") {
             while let Some(chunk) = field.try_next().await? {
                 new_content.push_str(std::str::from_utf8(&chunk).unwrap().to_string().as_str());
             }
         }
-        if field.name() == "password" {
+        if field.name() == Some("password") {
             while let Some(chunk) = field.try_next().await? {
                 password = std::str::from_utf8(&chunk).unwrap().to_string();
             }

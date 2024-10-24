@@ -11,12 +11,14 @@ use actix_web::{get, web, HttpResponse};
 use askama::Template;
 
 #[derive(Template)]
-#[template(path = "qr.html", escape = "none")]
+#[template(path = "qr.html")]
 struct QRTemplate<'a> {
     qr: &'a String,
     pasta: &'a Pasta,
     args: &'a Args,
 }
+
+
 
 #[get("/qr/{id}")]
 pub async fn getqr(data: web::Data<AppState>, id: web::Path<String>) -> HttpResponse {
