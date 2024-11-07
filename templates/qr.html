@@ -7,16 +7,13 @@
   <a href="{{ args.public_path_as_str() }}/upload/{{pasta.id_as_words()}}">Back to Upload</a>
 </div>
 
-
 <div style="text-align: center; padding: 3rem;">
   {% if pasta.pasta_type == "url" %}
-  <a href="{{ args.public_path_as_str() }}/url/{{pasta.id_as_words()}}">
-    {{qr}}
-  </a>
+      <div>{{qr|safe}}</div>
+      <div><a href="{{ args.public_path_as_str() }}/url/{{pasta.id_as_words()}}">Direct URL Link</a></div>
   {% else %}
-  <a href="{{ args.public_path_as_str() }}/upload/{{pasta.id_as_words()}}">
-    {{qr}}
-  </a>
+      <div>{{qr|safe}}</div>
+      <div><a href="{{ args.public_path_as_str() }}/upload/{{pasta.id_as_words()}}">Direct Upload Link</a></div>
   {% endif %}
 </div>
 

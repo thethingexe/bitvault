@@ -24,10 +24,10 @@ pub static CURRENT_VERSION: Version = Version {
     major: 1,
     minor: 1,
     patch: 1,
-    title: Cow::Borrowed("1.1.3"),
-    long_title: Cow::Borrowed("Version 1.1.3, Build 20241024"),
+    title: Cow::Borrowed("1.1.4"),
+    long_title: Cow::Borrowed("Version 1.1.4, Build 20241107"),
     description: Cow::Borrowed("This version includes bug fixes and smaller design enhancements."),
-    date: Cow::Borrowed("2024-10-24"),
+    date: Cow::Borrowed("2024-11-07"),
     update_type: Cow::Borrowed("beta"),
 };
 

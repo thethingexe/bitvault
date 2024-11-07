@@ -1,22 +1,23 @@
 // DISCLAIMER
 // (c) 2024-05-27 Mario Stöckl - derived from the original Microbin Project by Daniel Szabo
-use std::fs::{self, File};
+use std::fs::{File};
 use std::path::PathBuf;
 
 use crate::args::ARGS;
+use crate::util::auth;
 use crate::util::hashids::to_u64 as hashid_to_u64;
 use crate::util::misc::remove_expired;
 use crate::util::{bip39words::to_u64, misc::decrypt_file};
 use crate::AppState;
 use actix_multipart::Multipart;
+use actix_web::http::header;
 use actix_web::{get, post, web, Error, HttpResponse};
-use futures::TryStreamExt;
 
 #[post("/secure_file/{id}")]
 pub async fn post_secure_file(
     data: web::Data<AppState>,
     id: web::Path<String>,
-    mut payload: Multipart,
+    payload: Multipart,
 ) -> Result<HttpResponse, Error> {
     // get access to the pasta collection
     let mut pastas = data.pastas.lock().unwrap();
@@ -41,20 +42,12 @@ pub async fn post_secure_file(
         }
     }
 
-    let mut password = String::from("");
-
-    while let Some(mut field) = payload.try_next().await? {
-        if field.name() == Some("password") {
-            while let Some(chunk) = field.try_next().await? {
-                password.push_str(std::str::from_utf8(&chunk).unwrap().to_string().as_str());
-            }
-        }
-    }
+    let password = auth::password_from_multipart(payload).await?;
 
     if found {
         if let Some(ref pasta_file) = pastas[index].file {
             let file = File::open(format!(
-                "./{}/attachments/{}/data.enc",
+                "{}/attachments/{}/data.enc",
                 ARGS.data_dir,
                 pastas[index].id_as_words()
             ))?;
@@ -82,8 +75,9 @@ pub async fn post_secure_file(
 
 #[get("/file/{id}")]
 pub async fn get_file(
-    data: web::Data<AppState>,
+    request: actix_web::HttpRequest,
     id: web::Path<String>,
+    data: web::Data<AppState>,
 ) -> Result<HttpResponse, Error> {
     // get access to the pasta collection
     let mut pastas = data.pastas.lock().unwrap();
@@ -121,35 +115,25 @@ pub async fn get_file(
 
             // Construct the path to the file
             let file_path = format!(
-                "./{}/attachments/{}/{}",
+                "{}/attachments/{}/{}",
                 ARGS.data_dir,
                 pastas[index].id_as_words(),
                 pasta_file.name()
             );
             let file_path = PathBuf::from(file_path);
 
-            // Read the contents of the file into memory
-            // let mut file_content = Vec::new();
-            // let mut file = File::open(&file_path)?;
-            // file.read_exact(&mut file_content)?;
-
-            let file_contents = fs::read(&file_path)?;
-
-            // Set the content type based on the file extension
-            let content_type = mime_guess::from_path(&file_path)
-                .first_or_octet_stream()
-                .to_string();
-
-            // Create an HttpResponse object with the file contents as the response body
-            let response = HttpResponse::Ok()
-                .content_type(content_type)
-                .append_header((
-                    "Content-Disposition",
-                    format!("attachment; filename=\"{}\"", pasta_file.name()),
-                ))
-                .body(file_contents);
-
-            return Ok(response);
+            // This will stream the file and set the content type based on the
+            // file path
+            let file_reponse = actix_files::NamedFile::open(file_path)?;
+            let file_reponse = file_reponse.set_content_disposition(header::ContentDisposition {
+                disposition: header::DispositionType::Attachment,
+                parameters: vec![header::DispositionParam::Filename(
+                    pasta_file.name().to_string(),
+                )],
+            });
+            // This takes care of streaming/seeking using the Range
+            // header in the request.
+            return Ok(file_reponse.into_response(&request));
         }
     }
 

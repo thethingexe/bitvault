@@ -154,8 +154,9 @@
         <input type="hidden" name="syntax_highlight" value="none">
         {%- endif %}
 
+        {% if args.encryption_client_side || args.encryption_server_side || args.enable_readonly || args.private %}
         <div>
-            <label for="syntax_highlight">Privacy <sup> <a href="/guide#privacy">?</a></sup></label><br>
+            <label for="privacy">Privacy <sup> <a href="/guide#privacy">﹖</a></sup></label><br>
             <select style="width: 100%;" name="privacy" id="privacy">
                 <optgroup label="Unencrypted (no password)">
                     <option value="public">Public</option>
@@ -180,6 +181,7 @@
                 {%- endif %}
             </select>
         </div>
+        {%- endif %}
 
         {% if args.encryption_client_side || args.encryption_server_side || args.enable_readonly %}
         <div>
@@ -297,7 +299,7 @@
         content.value = contentInput.value;
         // {%- endif %}
 
-        if (contentInput.value.trim() == "" && hiddenFileButton.files.length == 0) {
+        if (contentInput.value.trim() == "" && (hiddenFileButton == undefined || hiddenFileButton.files.length == 0)) {
             contentInput.focus();
             return false;
         }
@@ -430,14 +432,31 @@
 
     function accessPaste() {
         const word1 = document.getElementById('word1').value.trim().toLowerCase();
-        const word2 = document.getElementById('word2').value.trim().toLowerCase();
+        const word2 = document.getElementById('word2').value.trim().toLowerCase(); 
         const word3 = document.getElementById('word3').value.trim().toLowerCase();
-        if (word1 && word2 && word3) {
-            const pasteId = `${word1}-${word2}-${word3}`;
-            window.location.href = `/upload/${pasteId}`;
-        } else {
+        
+        // Validate that inputs only contain valid characters for BIP39 words
+        const wordPattern = /^[a-z]+$/;
+        
+        if (!word1 || !word2 || !word3) {
             alert('Please fill in all word fields.');
+            return;
         }
+        
+        if (!wordPattern.test(word1) || !wordPattern.test(word2) || !wordPattern.test(word3)) {
+            alert('Words can only contain letters a-z');
+            return;
+        }
+        
+        // Size limits based on BIP39 word list constraints
+        const maxWordLength = 8; // Adjust based on your actual BIP39 word list
+        if (word1.length > maxWordLength || word2.length > maxWordLength || word3.length > maxWordLength) {
+            alert('Words are too long');
+            return;
+        }
+        
+        const pasteId = `${word1}-${word2}-${word3}`;
+        window.location.href = `/upload/${pasteId}`;
     };
 </script>
 <style>

@@ -64,9 +64,9 @@ pub fn expiration_to_timestamp(expiration: &str, timenow: i64) -> i64 {
         "1week" => timenow + 60 * 60 * 24 * 7,
         "never" => {
             if ARGS.eternal_pasta {
-                timenow + 60 * 60 * 24 * 365 * 100  // 100 years in the future
-            } else {
                 0
+            } else {
+                timenow + 60 * 60 * 24 * 365 * 100  // 100 years in the future
             }
         }
         _ => {
@@ -97,7 +97,7 @@ pub async fn create(
         extension: String::from(""),
         private: true, 
         readonly: false,
-        editable: true,
+        editable: ARGS.editable,
         encrypt_server: false,
         encrypted_key: Some(String::from("")),
         encrypt_client: false,
@@ -114,166 +114,160 @@ pub async fn create(
     let mut uploader_password = String::from("");
 
     while let Some(mut field) = payload.try_next().await? {
-        match field.name() {
-            Some(name) => match name {
-                "uploader_password" => {
-                    while let Some(chunk) = field.try_next().await? {
-                        uploader_password
-                            .push_str(std::str::from_utf8(&chunk).unwrap().to_string().as_str());
+        let field_name = field.name();
+        match field_name {
+            Some(name) => {
+                match name {
+                    "uploader_password" => {
+                        while let Some(chunk) = field.try_next().await? {
+                            uploader_password
+                                .push_str(std::str::from_utf8(&chunk).unwrap().to_string().as_str());
+                        }
                     }
-                    continue;
-                }
-                "random_key" => {
-                    while let Some(chunk) = field.try_next().await? {
-                        random_key = std::str::from_utf8(&chunk).unwrap().to_string();
+                    "random_key" => {
+                        while let Some(chunk) = field.try_next().await? {
+                            random_key = std::str::from_utf8(&chunk).unwrap().to_string();
+                        }
                     }
-                    continue;
-                }
-                "privacy" => {
-                    while let Some(chunk) = field.try_next().await? {
-                        let privacy = std::str::from_utf8(&chunk).unwrap();
-                        new_pasta.private = match privacy {
-                            "public" => false,
-                            _ => true,
-                        };
-                        new_pasta.readonly = match privacy {
-                            "readonly" => true,
-                            _ => false,
-                        };
-                        new_pasta.encrypt_client = match privacy {
-                            "secret" => true,
-                            _ => false,
-                        };
-                        new_pasta.encrypt_server = match privacy {
-                            "private" => true,
-                            "secret" => true,
-                            _ => false,
-                        };
+                    "privacy" => {
+                        while let Some(chunk) = field.try_next().await? {
+                            let privacy = std::str::from_utf8(&chunk).unwrap();
+                            new_pasta.private = match privacy {
+                                "public" => false,
+                                _ => true,
+                            };
+                            new_pasta.readonly = match privacy {
+                                "readonly" => true,
+                                _ => false,
+                            };
+                            new_pasta.encrypt_client = match privacy {
+                                "secret" => true,
+                                _ => false,
+                            };
+                            new_pasta.encrypt_server = match privacy {
+                                "private" => true,
+                                "secret" => true,
+                                _ => false,
+                            };
+                        }
                     }
-                }
-                "plain_key" => {
-                    while let Some(chunk) = field.try_next().await? {
-                        plain_key = std::str::from_utf8(&chunk).unwrap().to_string();
+                    "plain_key" => {
+                        while let Some(chunk) = field.try_next().await? {
+                            plain_key = std::str::from_utf8(&chunk).unwrap().to_string();
+                        }
                     }
-                    continue;
-                }
-                "encrypted_random_key" => {
-                    while let Some(chunk) = field.try_next().await? {
-                        new_pasta.encrypted_key =
-                            Some(std::str::from_utf8(&chunk).unwrap().to_string());
+                    "encrypted_random_key" => {
+                        while let Some(chunk) = field.try_next().await? {
+                            new_pasta.encrypted_key =
+                                Some(std::str::from_utf8(&chunk).unwrap().to_string());
+                        }
                     }
-                    continue;
-                }
-                "expiration" => {
-                    while let Some(chunk) = field.try_next().await? {
-                        new_pasta.expiration =
-                            expiration_to_timestamp(std::str::from_utf8(&chunk).unwrap(), timenow);
+                    "expiration" => {
+                        while let Some(chunk) = field.try_next().await? {
+                            new_pasta.expiration =
+                                expiration_to_timestamp(std::str::from_utf8(&chunk).unwrap(), timenow);
+                        }
                     }
-                    continue;
-                }
-                "burn_after" => {
-                    while let Some(chunk) = field.try_next().await? {
-                        new_pasta.burn_after_reads = match std::str::from_utf8(&chunk).unwrap() {
-                            // give an extra read because the user will be
-                            // redirected to the pasta page automatically
-                            "1" => 2,
-                            "10" => 10,
-                            "100" => 100,
-                            "1000" => 1000,
-                            "10000" => 10000,
-                            "0" => 0,
-                            _ => {
-                                log::error!("{}", "Unexpected burn after value!");
-                                0
-                            }
-                        };
+                    "burn_after" => {
+                        while let Some(chunk) = field.try_next().await? {
+                            new_pasta.burn_after_reads = match std::str::from_utf8(&chunk).unwrap() {
+                                "1" => 2,
+                                "10" => 10,
+                                "100" => 100,
+                                "1000" => 1000,
+                                "10000" => 10000,
+                                "0" => 0,
+                                _ => {
+                                    log::error!("{}", "Unexpected burn after value!");
+                                    0
+                                }
+                            };
+                        }
                     }
-                    continue;
-                }
-                "content" => {
-                    let mut content = String::from("");
-                    while let Some(chunk) = field.try_next().await? {
-                        content.push_str(std::str::from_utf8(&chunk).unwrap().to_string().as_str());
+                    "content" => {
+                        let mut content = String::from("");
+                        while let Some(chunk) = field.try_next().await? {
+                            content.push_str(std::str::from_utf8(&chunk).unwrap().to_string().as_str());
+                        }
+                        if !content.is_empty() {
+                            new_pasta.content = content;
+        
+                            new_pasta.pasta_type = if is_valid_url(new_pasta.content.as_str()) {
+                                String::from("url")
+                            } else {
+                                String::from("text")
+                            };
+                        }
                     }
-                    if !content.is_empty() {
-                        new_pasta.content = content;
-    
-                        new_pasta.pasta_type = if is_valid_url(new_pasta.content.as_str()) {
-                            String::from("url")
-                        } else {
-                            String::from("text")
-                        };
+                    "syntax_highlight" => {
+                        while let Some(chunk) = field.try_next().await? {
+                            new_pasta.extension = std::str::from_utf8(&chunk).unwrap().to_string();
+                        }
                     }
-                    continue;
-                }
-                "syntax_highlight" => {
-                    while let Some(chunk) = field.try_next().await? {
-                        new_pasta.extension = std::str::from_utf8(&chunk).unwrap().to_string();
-                    }
-                    continue;
-                }
-                "file" => {
-                    if ARGS.no_file_upload {
-                        continue;
-                    }
-    
-                    let path = field
-                        .content_disposition()
-                        .and_then(|cd| cd.get_filename())
-                        .map(|f| f.to_owned());
-    
-                    let path = match path {
-                        Some(ref p) if p.is_empty() => continue,
-                        Some(p) => p,
-                        None => continue,
-                    };
-    
-                    let mut file = match PastaFile::from_unsanitized(&path) {
-                        Ok(f) => f,
-                        Err(e) => {
-                            warn!("Unsafe file name: {e:?}");
+                    "file" => {
+                        if ARGS.no_file_upload {
                             continue;
                         }
-                    };
-    
-                    std::fs::create_dir_all(format!(
-                        "./{}/attachments/{}",
-                        ARGS.data_dir,
-                        &new_pasta.id_as_words()
-                    ))
-                    .unwrap();
-    
-                    let filepath = format!(
-                        "./{}/attachments/{}/{}",
-                        ARGS.data_dir,
-                        &new_pasta.id_as_words(),
-                        &file.name()
-                    );
-    
-                    let mut f = web::block(|| std::fs::File::create(filepath)).await??;
-                    let mut size = 0;
-                    while let Some(chunk) = field.try_next().await? {
-                        size += chunk.len();
-                        if (new_pasta.encrypt_server
-                            && size > ARGS.max_file_size_encrypted_mb * 1024 * 1024)
-                            || size > ARGS.max_file_size_unencrypted_mb * 1024 * 1024
-                        {
-                            return Err(ErrorBadRequest("File exceeded size limit."));
+        
+                        let path = field
+                            .content_disposition()
+                            .and_then(|cd| cd.get_filename())
+                            .map(|f| f.to_owned());
+        
+                        let path = match path {
+                            Some(ref p) if p.is_empty() => continue,
+                            Some(p) => p,
+                            None => continue,
+                        };
+        
+                        let mut file = match PastaFile::from_unsanitized(&path) {
+                            Ok(f) => f,
+                            Err(e) => {
+                                warn!("Unsafe file name: {e:?}");
+                                continue;
+                            }
+                        };
+        
+                        std::fs::create_dir_all(format!(
+                            "{}/attachments/{}",
+                            ARGS.data_dir,
+                            &new_pasta.id_as_words()
+                        ))
+                        .unwrap();
+        
+                        let filepath = format!(
+                            "{}/attachments/{}/{}",
+                            ARGS.data_dir,
+                            &new_pasta.id_as_words(),
+                            &file.name()
+                        );
+        
+                        let mut f = web::block(|| std::fs::File::create(filepath)).await??;
+                        let mut size = 0;
+                        while let Some(chunk) = field.try_next().await? {
+                            size += chunk.len();
+                            if (new_pasta.encrypt_server
+                                && size > ARGS.max_file_size_encrypted_mb * 1024 * 1024)
+                                || size > ARGS.max_file_size_unencrypted_mb * 1024 * 1024
+                            {
+                                return Err(ErrorBadRequest("File exceeded size limit."));
+                            }
+                            f = web::block(move || f.write_all(&chunk).map(|_| f)).await??;
                         }
-                        f = web::block(move || f.write_all(&chunk).map(|_| f)).await??;
+        
+                        file.size = ByteSize::b(size as u64);
+        
+                        new_pasta.file = Some(file);
+                        new_pasta.pasta_type = String::from("text");
                     }
-    
-                    file.size = ByteSize::b(size as u64);
-    
-                    new_pasta.file = Some(file);
-                    new_pasta.pasta_type = String::from("text");
+                    unknown_field => {
+                        log::error!("Unexpected multipart field: {:?}", unknown_field);
+                    }
                 }
-                unknown_field => {
-                    log::error!("Unexpected multipart field: {:?}", unknown_field);
-                }
-            },
+            }
             None => {
                 log::error!("Field name is None");
+                continue;
             }
         }
     }
@@ -302,7 +296,7 @@ pub async fn create(
 
     if new_pasta.file.is_some() && new_pasta.encrypt_server && !new_pasta.readonly {
         let filepath = format!(
-            "./{}/attachments/{}/{}",
+            "{}/attachments/{}/{}",
             ARGS.data_dir,
             &new_pasta.id_as_words(),
             &new_pasta.file.as_ref().unwrap().name()

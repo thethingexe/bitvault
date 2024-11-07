@@ -1,7 +1,7 @@
 // DISCLAIMER
 // (c) 2024-05-27 Mario Stöckl - derived from the original Microbin Project by Daniel Szabo
 use bytesize::ByteSize;
-use chrono::{Datelike, Local, TimeZone, Timelike, LocalResult};
+use chrono::{Datelike, Local, TimeZone, Timelike};
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::path::Path;
@@ -113,27 +113,7 @@ impl Pasta {
     }
 
     pub fn created_as_string(&self) -> String {
-        let date = match Local.timestamp_opt(self.created, 0) {
-            LocalResult::Single(dt) => dt,
-            _ => return String::from("Invalid date"),
-        };
-        format!(
-            "{:02}-{:02} {:02}:{:02}",
-            date.month(),
-            date.day(),
-            date.hour(),
-            date.minute(),
-        )
-    }
-
-    pub fn expiration_as_string(&self) -> String {
-        if self.expiration == 0 {
-            String::from("Never")
-        } else {
-            let date = match Local.timestamp_opt(self.expiration, 0) {
-                LocalResult::Single(dt) => dt,
-                _ => return String::from("Invalid date"),
-            };
+        Local.timestamp_opt(self.created, 0).map(|date| {
             format!(
                 "{:02}-{:02} {:02}:{:02}",
                 date.month(),
@@ -141,6 +121,28 @@ impl Pasta {
                 date.hour(),
                 date.minute(),
             )
+        }).earliest().unwrap_or_else(|| {
+            log::error!("Failed to process created date");
+            String::from("Unknow")
+        })
+    }
+
+    pub fn expiration_as_string(&self) -> String {
+        if self.expiration == 0 {
+            String::from("Never")
+        } else {
+            Local.timestamp_opt(self.expiration, 0).map(|date| {
+                format!(
+                    "{:02}-{:02} {:02}:{:02}",
+                    date.month(),
+                    date.day(),
+                    date.hour(),
+                    date.minute(),
+                )
+            }).earliest().unwrap_or_else(|| {
+                log::error!("Failed to process expiration");
+                String::from("Never")
+            })
         }
     }
 

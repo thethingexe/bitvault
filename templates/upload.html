@@ -74,11 +74,11 @@ justify-content: center; align-items: center;">
 <div class="code-container">
   <div style="clear: both;">
     {% if pasta.extension == "auto" || pasta.encrypt_client %}
-    <pre><code id="code">{{pasta.content_escaped()}}</code></pre>
+    <pre>{{pasta.content_escaped()}}</pre>
     {% else if args.highlightsyntax %}
-    <pre><code id="code">{{pasta.content_syntax_highlighted()}}</code></pre>
+    <pre>{{pasta.content_syntax_highlighted()|safe}}</pre>
     {% else %}
-    <pre><code id="code">{{pasta.content_not_highlighted()}}</code></pre>
+    <pre>{{pasta.content_not_highlighted()|safe}}</pre>
     {%- endif %}
   </div>
 </div>
@@ -343,7 +343,17 @@ if (gotoURL) {
     text-align: right;
     float: left;
     clear: left;
+    margin-left: auto;
   }
+
+  .code-container {
+    position: relative;
+    background: #444444;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 1rem 0;
+    margin-left: auto;
+  } 
 
   code-line::before {
     content: counter(line);
