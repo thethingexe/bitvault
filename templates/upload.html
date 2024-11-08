@@ -74,11 +74,11 @@ justify-content: center; align-items: center;">
 <div class="code-container">
   <div style="clear: both;">
     {% if pasta.extension == "auto" || pasta.encrypt_client %}
-    <pre>{{pasta.content_escaped()}}</pre>
+    <pre id="code">{{pasta.content|safe}}</pre>
     {% else if args.highlightsyntax %}
-    <pre>{{pasta.content_syntax_highlighted()|safe}}</pre>
+    <pre id="code">{{pasta.content_syntax_highlighted()|safe}}</pre>
     {% else %}
-    <pre>{{pasta.content_not_highlighted()|safe}}</pre>
+    <pre id="code">{{pasta.content_not_highlighted()|safe}}</pre>
     {%- endif %}
   </div>
 </div>
@@ -149,8 +149,13 @@ pasta.file_embeddable() && !pasta.encrypt_client %}
   const copyURLBtn = document.getElementById("copy-url-button")
   const copyTextBtn = document.getElementById("copy-text-button")
   const gotoURL = document.getElementById("go-to-url")
-  var content = `{{ pasta.content_escaped() }}`
+  var content = `{{pasta.content}}`; // No additional escaping  
   const contentElement = document.getElementById("code");
+  function decodeContent(str) {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = str;
+    return txt.value;
+  }
   const url = (`{{ args.short_path_as_str()}}` === "") ? `{{ args.public_path_as_str() }}/upload/{{pasta.id_as_words()}}` : `{{ args.short_path_as_str()}}/p/{{pasta.id_as_words()}}`
   const redirect_url = (`{{ args.short_path_as_str()}}` === "") ? `{{ args.public_path_as_str() }}/url/{{pasta.id_as_words()}}` : `{{ args.short_path_as_str()}}/u/{{pasta.id_as_words()}}`
 
