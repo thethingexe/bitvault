@@ -1,3 +1,4 @@
+![image](https://github.com/user-attachments/assets/c83f4952-e9ab-4a9a-8353-721a7b1da491)
 
 # BitVault
 

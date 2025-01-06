@@ -27,6 +27,7 @@ pub mod util {
     pub mod auth;
     pub mod db;
     pub mod db_json;
+    #[cfg(feature = "default")]
     pub mod db_sqlite;
     pub mod hashids;
     pub mod misc;
@@ -75,16 +76,16 @@ async fn main() -> std::io::Result<()> {
         ARGS.port.to_string()
     );
 
-    match fs::create_dir_all(format!("./{}/public", ARGS.data_dir)) {
+    match fs::create_dir_all(format!("{}/public", ARGS.data_dir)) {
         Ok(dir) => dir,
         Err(error) => {
             log::error!(
-                "Couldn't create data directory ./{}/attachments/: {:?}",
+                "Couldn't create data directory {}/attachments/: {:?}",
                 ARGS.data_dir,
                 error
             );
             panic!(
-                "Couldn't create data directory ./{}/attachments/: {:?}",
+                "Couldn't create data directory {}/attachments/: {:?}",
                 ARGS.data_dir, error
             );
         }

@@ -43,7 +43,7 @@ pub fn remove_expired(pastas: &mut Vec<Pasta>) {
             // remove the file itself
             if let Some(file) = &p.file {
                 if fs::remove_file(format!(
-                    "./{}/attachments/{}/{}",
+                    "{}/attachments/{}/{}",
                     ARGS.data_dir,
                     p.id_as_words(),
                     file.name()
@@ -55,7 +55,7 @@ pub fn remove_expired(pastas: &mut Vec<Pasta>) {
 
                 // and remove the containing directory
                 if fs::remove_dir(format!(
-                    "./{}/attachments/{}/",
+                    "{}/attachments/{}/",
                     ARGS.data_dir,
                     p.id_as_words()
                 ))

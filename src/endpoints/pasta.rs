@@ -6,21 +6,23 @@ use crate::pasta::Pasta;
 use crate::util::bip39words::to_u64;
 use crate::util::db::update;
 use crate::util::hashids::to_u64 as hashid_to_u64;
+use crate::util::auth;
 use crate::util::misc::remove_expired;
 use crate::AppState;
 use actix_multipart::Multipart;
 use actix_web::{get, post, web, Error, HttpResponse};
 use askama::Template;
-use futures::TryStreamExt;
+
 use magic_crypt::{new_magic_crypt, MagicCryptTrait};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 #[derive(Template)]
-#[template(path = "upload.html", escape = "none")]
+#[template(path = "upload.html")]
 struct PastaTemplate<'a> {
     pasta: &'a Pasta,
     args: &'a Args,
 }
+
 
 fn pastaresponse(
     data: web::Data<AppState>,
@@ -127,18 +129,9 @@ fn pastaresponse(
 pub async fn postpasta(
     data: web::Data<AppState>,
     id: web::Path<String>,
-    mut payload: Multipart,
+    payload: Multipart,
 ) -> Result<HttpResponse, Error> {
-    let mut password = String::from("");
-
-    while let Some(mut field) = payload.try_next().await? {
-        if field.name() == "password" {
-            while let Some(chunk) = field.try_next().await? {
-                password.push_str(std::str::from_utf8(&chunk).unwrap().to_string().as_str());
-            }
-        }
-    }
-
+    let password = auth::password_from_multipart(payload).await?;
     Ok(pastaresponse(data, id, password))
 }
 
@@ -146,17 +139,9 @@ pub async fn postpasta(
 pub async fn postshortpasta(
     data: web::Data<AppState>,
     id: web::Path<String>,
-    mut payload: Multipart,
+    payload: Multipart,
 ) -> Result<HttpResponse, Error> {
-    let mut password = String::from("");
-
-    while let Some(mut field) = payload.try_next().await? {
-        if field.name() == "password" {
-            while let Some(chunk) = field.try_next().await? {
-                password.push_str(std::str::from_utf8(&chunk).unwrap().to_string().as_str());
-            }
-        }
-    }
+    let password = auth::password_from_multipart(payload).await?;
 
     Ok(pastaresponse(data, id, password))
 }
@@ -307,7 +292,7 @@ pub async fn getrawpasta(
 
         // send raw content of pasta
         let response = Ok(HttpResponse::NotFound()
-            .content_type("text/plain")
+            .content_type("text/plain; charset=utf-8")
             .body(pastas[index].content.to_owned()));
 
         return response;
@@ -323,17 +308,9 @@ pub async fn getrawpasta(
 pub async fn postrawpasta(
     data: web::Data<AppState>,
     id: web::Path<String>,
-    mut payload: Multipart,
+    payload: Multipart,
 ) -> Result<HttpResponse, Error> {
-    let mut password = String::from("");
-
-    while let Some(mut field) = payload.try_next().await? {
-        if field.name() == "password" {
-            while let Some(chunk) = field.try_next().await? {
-                password.push_str(std::str::from_utf8(&chunk).unwrap().to_string().as_str());
-            }
-        }
-    }
+    let password = auth::password_from_multipart(payload).await?;
 
     // get access to the pasta collection
     let mut pastas = data.pastas.lock().unwrap();

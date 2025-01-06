@@ -9,6 +9,7 @@ use crate::AppState;
 use actix_web::{get, web, HttpResponse};
 use askama::Template;
 
+
 #[derive(Template)]
 #[template(path = "auth_upload.html")]
 struct AuthPasta<'a> {
@@ -19,6 +20,8 @@ struct AuthPasta<'a> {
     encrypt_client: bool,
     path: String,
 }
+
+
 
 #[get("/auth/{id}")]
 pub async fn auth_upload(data: web::Data<AppState>, id: web::Path<String>) -> HttpResponse {
