@@ -149,7 +149,7 @@ pasta.file_embeddable() && !pasta.encrypt_client %}
   const copyURLBtn = document.getElementById("copy-url-button")
   const copyTextBtn = document.getElementById("copy-text-button")
   const gotoURL = document.getElementById("go-to-url")
-  var content = `{{pasta.content}}`; // No additional escaping  
+  var content = `{{pasta.content_escaped()}}`; // Properly escaped for JavaScript  
   const contentElement = document.getElementById("code");
   function decodeContent(str) {
     const txt = document.createElement("textarea");
@@ -353,7 +353,7 @@ if (gotoURL) {
 
   .code-container {
     position: relative;
-    background: #444444;
+    background: var(--background);
     border-radius: 6px;
     overflow: hidden;
     margin: 1rem 0;
@@ -381,7 +381,7 @@ if (gotoURL) {
   }
 
   #embed {
-    background-color: #f7f7f7;
+    background-color: var(--background-alt);
     border-radius: 6px;
     margin-top: 1rem;
     margin-bottom: 1rem;
@@ -423,7 +423,7 @@ if (gotoURL) {
 {% if !args.pure_html %}
 <style>
   #decryption {
-    background-color: #f7f7f7;
+    background-color: var(--background-alt);
     border-radius: 6px;
     padding: 10px;
     width: fit-content;

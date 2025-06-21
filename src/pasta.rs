@@ -245,11 +245,11 @@ impl Pasta {
     }
 
     pub fn content_escaped(&self) -> String {
-        // Only escape what's absolutely necessary for JavaScript
+        // Only escape what's absolutely necessary for JavaScript template literals
         self.content
             .replace('\\', "\\\\")
             .replace('`', "\\`")
-            .replace('$', "\\$")
+            .replace("${", "\\${")
     }
 }
 
