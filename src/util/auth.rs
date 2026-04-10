@@ -1,5 +1,5 @@
 // DISCLAIMER
-// (c) 2024-05-27 Mario Stöckl - derived from the original Microbin Project by Daniel Szabo
+// (c) 2024-05-27 overcuriousity - derived from the original Microbin Project by Daniel Szabo
 use actix_multipart::Multipart;
 use actix_web::dev::ServiceRequest;
 use actix_web::web::Bytes;
@@ -24,6 +24,31 @@ pub async fn auth_validator(
             Ok(req)
         }
         _ => Err((error::ErrorBadRequest("Invalid login details."), req)),
+    }
+}
+
+/// Basic Auth validator for the API scope. Returns a JSON 401 instead of the
+/// web UI's HTML 400, keeping all API error responses machine-parseable.
+pub async fn api_auth_validator(
+    req: ServiceRequest,
+    creds: BasicAuth,
+) -> Result<ServiceRequest, (Error, ServiceRequest)> {
+    match (
+        ARGS.auth_basic_username.as_ref(),
+        ARGS.auth_basic_password.as_ref(),
+        creds.password(),
+    ) {
+        (Some(conf_user), Some(conf_pwd), Some(cred_pwd))
+            if creds.user_id() == conf_user && conf_pwd == cred_pwd =>
+        {
+            Ok(req)
+        }
+        _ => {
+            use actix_web::HttpResponse;
+            let body = serde_json::json!({"error": "Invalid credentials", "code": "UNAUTHORIZED"});
+            let response = HttpResponse::Unauthorized().json(body);
+            Err((error::InternalError::from_response("Unauthorized", response).into(), req))
+        }
     }
 }
 

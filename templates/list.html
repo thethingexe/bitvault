@@ -1,5 +1,5 @@
 <!-- # DISCLAIMER
-# (c) 2024-05-27 Mario Stöckl - derived from the original Microbin Project by Daniel Szabo -->
+# (c) 2024-05-27 overcuriousity - derived from the original Microbin Project by Daniel Szabo -->
 
 {% include "header.html" %}
 
@@ -79,6 +79,12 @@
                             {%- else %}
                             File
                             {%- endif %}
+                        </a>
+                        {%- endif %}
+                        {% if pasta.has_attachments() && !pasta.encrypt_server && !pasta.encrypt_client %}
+                        <a style="margin-right:1rem"
+                            href="{{ args.public_path_as_str() }}/archive/{{pasta.id_as_words()}}">
+                            +{{pasta.attachments.as_ref().unwrap().len()}} more
                         </a>
                         {%- endif %}
                     </td>

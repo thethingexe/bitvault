@@ -1,9 +1,5 @@
 // DISCLAIMER
-// (c) 2024-05-27 Mario Stöckl - derived from the original Microbin Project by Daniel Szabo
-extern crate reqwest;
-extern crate serde;
-extern crate serde_json;
-
+// (c) 2024-05-27 overcuriousity - derived from the original Microbin Project by Daniel Szabo
 use std::borrow::Cow;
 
 use serde::{Deserialize, Serialize};
@@ -20,37 +16,15 @@ pub struct Version {
     pub update_type: Cow<'static, str>,
 }
 
+pub static GIT_COMMIT: &str = env!("GIT_COMMIT_SHORT");
+
 pub static CURRENT_VERSION: Version = Version {
     major: 1,
     minor: 1,
-    patch: 1,
+    patch: 4,
     title: Cow::Borrowed("1.1.4"),
     long_title: Cow::Borrowed("Version 1.1.4, Build 20241107"),
     description: Cow::Borrowed("This version includes bug fixes and smaller design enhancements."),
     date: Cow::Borrowed("2024-11-07"),
     update_type: Cow::Borrowed("beta"),
 };
-
-impl Version {
-    pub fn newer_than(&self, other: &Version) -> bool {
-        if self.major != other.major {
-            self.major > other.major
-        } else if self.minor != other.minor {
-            self.minor > other.minor
-        } else {
-            self.patch > other.patch
-        }
-    }
-
-    pub fn newer_than_current(&self) -> bool {
-        self.newer_than(&CURRENT_VERSION)
-    }
-}
-
-pub async fn fetch_latest_version() -> Result<Version, reqwest::Error> {
-    let url = "https://github.com/overcuriousity/bitvault/";
-    let response = reqwest::get(url).await?;
-    let version = response.json::<Version>().await?;
-
-    Ok(version)
-}

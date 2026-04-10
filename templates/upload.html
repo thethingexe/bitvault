@@ -1,5 +1,5 @@
 <!-- # DISCLAIMER
-# (c) 2024-05-27 Mario Stöckl - derived from the original Microbin Project by Daniel Szabo -->
+# (c) 2024-05-27 overcuriousity - derived from the original Microbin Project by Daniel Szabo -->
 
 {% include "header.html" %}
 <div style="float: left">
@@ -31,6 +31,9 @@
   <button id="copy-url-button" class="small-button" style="margin-right: 0">
     Copy URL
   </button>
+  {%- endif %}
+  {% if args.translate_url_as_str() != "" && args.public_path_as_str() != "" && pasta.content != "" && pasta.pasta_type != "url" && !pasta.encrypt_client && !pasta.encrypt_server %}
+  <a style="margin-left: 0.5rem" href="{{ args.translate_url_as_str() }}?from={{ args.public_path_as_str()|urlencode }}/raw/{{ pasta.id_as_words()|urlencode }}">Translate</a>
   {%- endif %}
 </div>
 
@@ -97,6 +100,37 @@ justify-content: center; align-items: center;">
 </span>
 {%- endif %}
 
+{% if pasta.has_attachments() && pasta.encrypt_server && !pasta.encrypt_client %}
+<div style="margin-top: 1rem;">
+  <p style="font-size: small;"><b>Attachments</b> (password required)</p>
+  {% for attachment in pasta.attachments.as_ref().unwrap() %}
+  <span style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem;">
+    <p style="font-size: small; margin: 0;">{{attachment.name()}} [{{attachment.size}}]</p>
+    <a href="{{ args.public_path_as_str()}}/file/{{pasta.id_as_words()}}?fname={{attachment.name()|urlencode}}">
+      <button class="download-button">Download</button>
+    </a>
+  </span>
+  {%- endfor %}
+</div>
+{%- endif %}
+
+{% if pasta.has_attachments() && !pasta.encrypt_client && !pasta.encrypt_server %}
+<div style="margin-top: 1rem;">
+  <p style="font-size: small;"><b>Attachments</b></p>
+  {% for attachment in pasta.attachments.as_ref().unwrap() %}
+  <span style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem;">
+    <p style="font-size: small; margin: 0;">{{attachment.name()}} [{{attachment.size}}]</p>
+    <a href="{{ args.public_path_as_str()}}/file/{{pasta.id_as_words()}}?fname={{attachment.name()|urlencode}}">
+      <button class="download-button">Download</button>
+    </a>
+  </span>
+  {%- endfor %}
+  <a href="{{ args.public_path_as_str()}}/archive/{{pasta.id_as_words()}}">
+    <button class="download-button" style="margin-top: 0.5rem;">Download all as ZIP</button>
+  </a>
+</div>
+{%- endif %}
+
 
 {% if pasta.file.is_some() && pasta.file.as_ref().unwrap().is_image() &&
 pasta.file_embeddable() && !pasta.encrypt_client %}
@@ -138,6 +172,9 @@ pasta.file_embeddable() && !pasta.encrypt_client %}
     {{pasta.last_read_time_ago_as_string()}}</p>
   {%- endif %} {%- endif %}
 
+  {% if pasta.expiration != 0 %}
+  <p id="expiry-line" style="font-size: small" data-ts="{{ pasta.expiration }}">Expires {{ pasta.expiration_as_string() }}</p>
+  {%- endif %}
 </div>
 
 <br>
@@ -340,6 +377,20 @@ if (gotoURL) {
     return decryptedBytes;
   }
 // {% endif %}
+
+(function () {
+  var el = document.getElementById('expiry-line');
+  if (!el) return;
+  var ts = +el.dataset.ts * 1000;
+  var intervalId;
+  function upd() {
+    var d = Math.floor((ts - Date.now()) / 1000);
+    if (d <= 0) { el.textContent = 'Expired'; clearInterval(intervalId); return; }
+    var h = Math.floor(d / 3600), m = Math.floor(d % 3600 / 60), s = d % 60;
+    el.textContent = 'Expires in ' + (h ? h + 'h ' : '') + m + 'm ' + s + 's';
+  }
+  upd(); intervalId = setInterval(upd, 1000);
+})();
 </script>
 
 <style>

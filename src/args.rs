@@ -1,5 +1,5 @@
 // DISCLAIMER
-// (c) 2024-05-27 Mario Stöckl - derived from the original Microbin Project by Daniel Szabo
+// (c) 2024-05-27 overcuriousity - derived from the original Microbin Project by Daniel Szabo
 use clap::Parser;
 use lazy_static::lazy_static;
 use serde::Serialize;
@@ -11,6 +11,13 @@ use std::str::FromStr;
 lazy_static! {
     pub static ref ARGS: Args = Args::parse();
 }
+
+/// Single source of truth for valid expiry option strings, ordered shortest → longest.
+/// Used by both the CLI value_parser and the server-side validation in `create.rs`.
+pub const EXPIRATION_OPTIONS: &[&str] = &[
+    "1min", "10min", "1hour", "24hour", "3days", "1week",
+    "1month", "6months", "1year", "2years", "4years", "8years", "16years", "never",
+];
 
 #[derive(Parser, Debug, Clone, Serialize)]
 #[clap(author, version, about, long_about = None)]
@@ -120,9 +127,23 @@ pub struct Args {
     #[clap(long, env = "BITVAULT_HASH_IDS")]
     pub hash_ids: bool,
 
+    #[clap(long, env = "BITVAULT_API_KEY")]
+    pub api_key: Option<String>,
 
-    #[clap(long, env = "BITVAULT_DISABLE_UPDATE_CHECKING")]
-    pub disable_update_checking: bool,
+    #[clap(
+        long,
+        env = "BITVAULT_MAX_EXPIRY",
+        default_value = "1week",
+        value_parser = clap::builder::PossibleValuesParser::new(EXPIRATION_OPTIONS)
+    )]
+    pub max_expiry: String,
+
+    #[clap(
+        long,
+        env = "BITVAULT_DEFAULT_PRIVACY",
+        value_parser = clap::builder::PossibleValuesParser::new(["public", "unlisted", "readonly", "private", "secret"])
+    )]
+    pub default_privacy: Option<String>,
 
     #[clap(long, env = "BITVAULT_ENCRYPTION_CLIENT_SIDE")]
     pub encryption_client_side: bool,
@@ -143,6 +164,9 @@ pub struct Args {
         default_value_t = 2048
     )]
     pub max_file_size_unencrypted_mb: usize,
+
+    #[clap(long, env = "BITVAULT_TRANSLATE_URL")]
+    pub translate_url: Option<String>,
 }
 
 impl Args {
@@ -202,14 +226,32 @@ impl Args {
             no_file_upload: self.no_file_upload,
             custom_css: self.custom_css,
             hash_ids: self.hash_ids,
+            api_key: None,
+            max_expiry: self.max_expiry,
+            default_privacy: self.default_privacy,
             encryption_client_side: self.encryption_client_side,
             encryption_server_side: self.encryption_server_side,
             max_file_size_encrypted_mb: self.max_file_size_encrypted_mb,
             max_file_size_unencrypted_mb: self.max_file_size_unencrypted_mb,
-            disable_update_checking: true,
-            //disable_update_checking: self.disable_update_checking,
-
+            translate_url: self.translate_url,
         }
+    }
+
+    pub fn git_commit(&self) -> &'static str {
+        crate::util::version::GIT_COMMIT
+    }
+
+    pub fn translate_url_as_str(&self) -> String {
+        self.translate_url
+            .as_deref()
+            .unwrap_or("")
+            .trim()
+            .trim_end_matches('/')
+            .to_string()
+    }
+
+    pub fn max_expiry_index(&self) -> usize {
+        EXPIRATION_OPTIONS.iter().position(|&o| o == self.max_expiry).unwrap_or(5)
     }
 }
 
